@@ -1,0 +1,7 @@
+requests
+opencv-python
+asyncio
+beautifulsoup4
+numpy
+selenium
+lxml
