@@ -14,7 +14,7 @@ Arguments | Function | default | notes
 `-u --url` | Rss url or chapter url | | 
 `-f --format` | Save as pdf or png | png | PDF Maximum supported image dimension is 65500 pixels
 `-p --pool` |  Multi-processing Pool size  | 2 | 
-`-s --splite` | Save chapter image in separate file | False | By default a chapter will be save in on file
+`-s --splite` | Save chapter image in separate file | False | By default a chapter will be save in one file
 
 - Download all chapter
     ```
