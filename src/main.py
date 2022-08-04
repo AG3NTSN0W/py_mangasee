@@ -36,7 +36,7 @@ if __name__ == "__main__":
         '-f',
         '--format',
         help='File formate to save in pdf | png',
-        default='pdf'
+        default='png'
     )    
 
     parser.add_argument(
