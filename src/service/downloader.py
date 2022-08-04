@@ -58,7 +58,7 @@ class Downloader:
             raise Exception("No chapters found")  
         self.total_chapters = len(self.chapters) 
         self.save_to_path = f"/downloads/{self.title}"
-        self.chapters = self.chapters[:1]
+        # self.chapters = self.chapters[:1]
         self.chapters = self.pool_handler()
         self.retry_pool()
              
