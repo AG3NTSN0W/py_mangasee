@@ -1,23 +1,19 @@
 import os
 import time
 from utils.logger import logger 
+from utils.duration import duration 
 from multiprocessing import Pool
 from service.save_img import save_images
 from service.get_chapters import get_chapters
 from service.download_img import get_image_list
 from repository.retry_config import save_retry_config
 
-def duration(start):
-    end = time.time()
-    hours, rem = divmod(end-start, 3600)
-    minutes, seconds = divmod(rem, 60)
-    duration = "{:0>2}:{:0>2}:{:05.2f}".format(int(hours),int(minutes),seconds)
-    logger.info(f"Duration: {duration}")
-
 class Downloader:
-    def __init__(self):
-        self.pool_size = 5
+    def __init__(self, split=False, pool=2, format="png"):
+        self.pool_size = pool
         self.image_count = 0
+        self.split = split
+        self.format = format
         pass
 
     def dowload_all_chapters(self, goto_url):
@@ -40,7 +36,7 @@ class Downloader:
             if (img_list == None or not img_list):
                 return
             file_name = goto_url.split("/")[-1].replace(".html", "").replace("-", " ")
-            save_images()(img_list, self.save_to_path, file_name)
+            save_images(self.split)(img_list, self.save_to_path, file_name, self.format)
         except Exception as e:
             logger.error(e)        
         pass    
@@ -62,7 +58,7 @@ class Downloader:
             raise Exception("No chapters found")  
         self.total_chapters = len(self.chapters) 
         self.save_to_path = f"/downloads/{self.title}"
-        # self.chapters = self.chapters[:1]
+        self.chapters = self.chapters[:1]
         self.chapters = self.pool_handler()
         self.retry_pool()
              
@@ -73,14 +69,13 @@ class Downloader:
                 if (img_list == None or not img_list):
                     return
                 file_name = goto_url.split("/")[-1].replace(".html", "").replace("-", " ")
-                save_images()(img_list, self.save_to_path, file_name)
+                save_images(self.split)(img_list, self.save_to_path, file_name, self.format)
             except Exception as e:
                 if (e.args and len(e.args) >= 2):
                     logger.error(f"[{e.args[1]}]: An exception occurred: {e.args[0]}, {chapter['title']}")
                     return chapter
                 logger.error(e)
                 return chapter
-                   
 
     def pool_handler(self):
         if(not self.hasChapters()):

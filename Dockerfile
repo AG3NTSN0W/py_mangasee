@@ -40,5 +40,4 @@ WORKDIR /app
 RUN ln -sf /dev/stdout app.log \
 	&& ln -sf /dev/stderr app.log
 
-
-CMD python ./main.py
+ENTRYPOINT ["python", "./main.py"]
