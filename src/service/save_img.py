@@ -1,6 +1,8 @@
 import os
 import cv2
+import math
 import logging
+import numpy as np
 
 from PIL import Image
 from utils.logger import logger 
@@ -10,9 +12,17 @@ def to_png(im_v, img_name):
 
 def to_pdf(im_v, img_name):
     try:
-        im_pil = Image.fromarray(im_v)
-        im_pil.save(f'{img_name}.pdf')
-    except OSError as e:
+        im_v = cv2.cvtColor(im_v, cv2.COLOR_RGB2BGR)
+        # chunk = math.ceil((im_v.shape[0]/65500))
+        chunk = math.ceil((im_v.shape[0]/50000))
+        if chunk >= 2:
+            chunks = np.array_split(im_v, chunk)
+            c = list(map(lambda x: Image.fromarray(x), chunks))
+            c[0].save(f'{img_name}.pdf', save_all=True, append_images=c[1:])
+        else:
+            im_pil = Image.fromarray(im_v)
+            im_pil.save(f'{img_name}.pdf')               
+    except Exception as e:
         logger.error(f"An exception occurred: {e}: Saving to png instead")  
         to_png(im_v, img_name)
 
@@ -34,9 +44,8 @@ def to_file(img_list, path, file_name, type="pdf"):
 def merge_all(img_list, path, file_name, type="pdf"):
     logger.info(f"[{file_name}]: All Image dowloaded starting with merge ...")
     os.makedirs(f"{path}", exist_ok=True)
-    im_v = cv2.vconcat(img_list)
     img_name = os.path.join(path, file_name)
-    save_type(type)(im_v, img_name)
+    save_type(type)(cv2.vconcat(img_list), img_name)
     logger.info(f'Chapter saved: {file_name}.{type}')
 
 
