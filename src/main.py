@@ -12,16 +12,18 @@ def start(args):
     format = args.format
     url = args.url
     splite = args.splite
+    chapter = args.chapter
 
     downloader = Downloader(splite, pool, format)
+
+    if (url and validateUrl("https:\/\/mangasee123\.com\/rss\/.*\.xml", url) and chapter):
+        downloader.dowload_chapter(url, chapter)
+        return
 
     if (url and validateUrl("https:\/\/mangasee123\.com\/rss\/.*\.xml", url)):
         downloader.dowload_all_chapters(url)
         return
-    
-    if (url and validateUrl("https:\/\/mangasee123\.com\/read-online\/.*\.html", url)):
-        downloader.dowload_one_chapters(url)
-        return
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='')
@@ -29,14 +31,14 @@ if __name__ == "__main__":
     parser.add_argument(
             '-u',
             '--url',
-            help='Url of manga chapter to download or RSS of the manga to download'
+            help='RSS of the manga to download'
     )
 
     parser.add_argument(
         '-f',
         '--format',
         help='File formate to save in pdf | png',
-        default='png'
+        default='pdf'
     )    
 
     parser.add_argument(
@@ -54,7 +56,12 @@ if __name__ == "__main__":
         action='store_true',
         default=False
     )    
-    
+
+    parser.add_argument(
+        '-c',
+        '--chapter',
+        help='Chapter number',
+    )    
     
     start(parser.parse_args())
     pass

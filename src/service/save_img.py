@@ -13,8 +13,8 @@ def to_png(im_v, img_name):
 def to_pdf(im_v, img_name):
     try:
         im_v = cv2.cvtColor(im_v, cv2.COLOR_RGB2BGR)
-        # chunk = math.ceil((im_v.shape[0]/65500))
-        chunk = math.ceil((im_v.shape[0]/50000))
+        # chunk = math.ceil((im_v.shape[0]/65500)) # max amount of pixels
+        chunk = math.ceil((im_v.shape[0]/20000))
         if chunk >= 2:
             chunks = np.array_split(im_v, chunk)
             c = list(map(lambda x: Image.fromarray(x), chunks))

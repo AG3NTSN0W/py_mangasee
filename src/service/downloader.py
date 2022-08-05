@@ -4,12 +4,12 @@ from utils.logger import logger
 from utils.duration import duration 
 from multiprocessing import Pool
 from service.save_img import save_images
-from service.get_chapters import get_chapters
+from service.get_chapters import get_chapters, get_chapter
 from service.download_img import get_image_list
 from repository.retry_config import save_retry_config
 
 class Downloader:
-    def __init__(self, split=False, pool=2, format="png"):
+    def __init__(self, split=False, pool=2, format="pdf"):
         self.pool_size = pool
         self.image_count = 0
         self.split = split
@@ -29,14 +29,13 @@ class Downloader:
             logger.error(e)        
         pass
 
-    def dowload_one_chapters(self, title, goto_url):
+    def dowload_chapter(self, goto_url, chapter):
         try:
-            self.save_to_path = f"/downloads/{self.title}"
-            img_list = get_image_list(goto_url)
-            if (img_list == None or not img_list):
-                return
-            file_name = goto_url.split("/")[-1].replace(".html", "").replace("-", " ")
-            save_images(self.split)(img_list, self.save_to_path, file_name, self.format)
+            self.title, self.chapters = get_chapter(goto_url, chapter)
+            if self.hasChapters():
+                self.init_pool()  
+            else:
+                logger.error(f"Chapter: [{chapter}] Not found for {self.title}")    
         except Exception as e:
             logger.error(e)        
         pass    

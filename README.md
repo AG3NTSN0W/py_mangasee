@@ -3,7 +3,7 @@ Download all chapter from mangasee.
 
 ## Requirements
 - docker
-- RSS url or chapter url
+- RSS url
 
 Files will be saved to /tmp/downloads
 
@@ -12,9 +12,11 @@ Files will be saved to /tmp/downloads
 Arguments | Function | default | notes
 ------------ | ------------ | ------------ | ------------
 `-u --url` | Rss url or chapter url | | 
-`-f --format` | Save as pdf or png | png | PDF Maximum supported image dimension is 65500 pixels
+`-f --format` | Save as pdf or png | pdf | 
+`-c --chapter` | Download one chapter |  | 
 `-p --pool` |  Multi-processing Pool size  | 2 | 
-`-s --splite` | Save chapter image in separate file | False | By default a chapter will be save in one file
+`-s --splite` | Save chapter image in separate file | False | By default a chapter will be save in one file <br> Pdf format will save manga over mutiple pages
+
 
 - Download all chapter
     ```
@@ -23,7 +25,7 @@ Arguments | Function | default | notes
 
 - Download one chapter
     ```
-    bash run.sh -u https://mangasee123.com/read-online/<manga_name>-chapter-85.html
+    bash run.sh -u https://mangasee123.com/rss/<manga_name>.xml -c 5
     ```
 
 
