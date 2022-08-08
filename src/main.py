@@ -1,11 +1,13 @@
 import re
 import argparse
-from utils.logger import logger 
+from utils.logger import logger
 from service.downloader import Downloader
 from service.retry_service import retry_from_config
 
+
 def validateUrl(pattern, value):
     return re.match(pattern, value)
+
 
 def start(args):
     pool = args.pool
@@ -16,22 +18,22 @@ def start(args):
 
     downloader = Downloader(splite, pool, format)
 
-    if (url and validateUrl("https:\/\/mangasee123\.com\/rss\/.*\.xml", url) and chapter):
+    if (not url and not validateUrl("https:\/\/mangasee123\.com\/rss\/.*\.xml", url)):
+        return
+
+    if(chapter):
         downloader.dowload_chapter(url, chapter)
         return
 
-    if (url and validateUrl("https:\/\/mangasee123\.com\/rss\/.*\.xml", url)):
-        downloader.dowload_all_chapters(url)
-        return
+    downloader.dowload_all_chapters(url)
 
-
-if __name__ == "__main__":
+def arguments():
     parser = argparse.ArgumentParser(description='')
 
     parser.add_argument(
-            '-u',
-            '--url',
-            help='RSS of the manga to download'
+        '-u',
+        '--url',
+        help='RSS of the manga to download'
     )
 
     parser.add_argument(
@@ -39,7 +41,7 @@ if __name__ == "__main__":
         '--format',
         help='File formate to save in pdf | png',
         default='pdf'
-    )    
+    )
 
     parser.add_argument(
         '-p',
@@ -47,7 +49,7 @@ if __name__ == "__main__":
         help='Pool size',
         type=int,
         default=2
-    )    
+    )
 
     parser.add_argument(
         '-s',
@@ -55,17 +57,17 @@ if __name__ == "__main__":
         help='Save all image into separate file',
         action='store_true',
         default=False
-    )    
+    )
 
     parser.add_argument(
         '-c',
         '--chapter',
         help='Chapter number',
-    )    
+    )
+    return parser
+
+if __name__ == "__main__":
     
-    start(parser.parse_args())
+    # start(arguments().parse_args())
+    retry_from_config()
     pass
-
-
-
-

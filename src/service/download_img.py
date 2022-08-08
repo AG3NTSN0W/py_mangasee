@@ -1,12 +1,9 @@
 import cv2
 import time
-import asyncio
 import requests
 import numpy as np
-from bs4 import BeautifulSoup
 from utils.logger import logger 
 from utils.duration import duration 
-from service.save_img import save_images
 from service.web_scraper import get_manga_images, WebScraperException
 
 img_width = 0
@@ -44,11 +41,11 @@ def downloaded_img(url_list):
             raise Exception(f'Unable to downlaod {image_url}')
     return img_list
     
-def get_image_list(goto_url, should_merge=True):
+def get_image_list(goto_url):
     try:
         start = time.time()
         image_list = get_manga_images(goto_url)
-        logger.debug(f"Found {len(image_list)} images URL [{goto_url}]")
+        logger.info(f"Downoading {len(image_list)} images from URL [{goto_url}]")
         img_list = downloaded_img(image_list)
         if (not len(image_list) == len(img_list)):
             raise Exception('Failed to download all images')
