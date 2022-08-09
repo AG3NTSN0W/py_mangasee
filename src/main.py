@@ -68,6 +68,7 @@ def arguments():
 
 if __name__ == "__main__":
     
-    # start(arguments().parse_args())
-    retry_from_config()
+    start(arguments().parse_args())
+    # retry_from_config()
+
     pass

@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+from datetime import datetime
 
 
 def get_retry_path():
@@ -22,7 +23,7 @@ def get_retry_config(file_name):
 
 def save_retry_config(chapters):
     try:
-        title = chapters[0]['title']
+        title = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
         if(not os.path.exists(get_retry_path())):
             logging.debug(f"Add missing retry config dir")
             os.makedirs(f"{get_retry_path()}")
