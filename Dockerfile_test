@@ -41,7 +41,4 @@ RUN echo "\n\
 import unittest \n\
 unittest.TextTestRunner(verbosity=2).run(unittest.TestLoader().discover('./tests', pattern = '*_test.py')) \n" >> test.py
 
-RUN ls -lt
-
-
 CMD ["python", "test.py"]

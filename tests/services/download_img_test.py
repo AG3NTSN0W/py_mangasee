@@ -50,13 +50,3 @@ class TestDownloadImg(unittest.TestCase):
         with self.assertRaises(Exception):
             self.downloadImg.get_percentage(
                 self.max_width, "200")
-
-    # TODO: Complete errors
-    def test_new_height_error(self):
-        height = self.downloadImg.new_height(
-            self.current_height, self.percentage)
-        self.assertEquals(height, self.current_height)
-
-    def test_get_dim_error(self):
-        dim = self.downloadImg.get_dim(self.current_width, self.current_height)
-        self.assertEquals(dim, (self.current_width, self.current_height))

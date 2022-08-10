@@ -53,7 +53,7 @@ class Downloader:
     def dowload_all_chapters_start(self):
         self.chapters = get_chapters(self.goto_url)
         self.init_pool()
-        self.validate_Chapters(self.chapters[0]['title'])
+        self.validate_Chapters(self.chapters[0].title)
         pass
 
     def init_pool(self):
@@ -66,8 +66,7 @@ class Downloader:
 
     def pool_worker(self, chapter):
         try:
-            title = chapter['title']
-            goto_url = chapter['link']
+            goto_url = chapter.link
             img_list = DownloadImg().get_image_list(goto_url)
             if (img_list == None or not img_list):
                 return
@@ -75,11 +74,11 @@ class Downloader:
                 "/")[-1].replace(".html", "").replace("-", " ")
         
             save_images(self.split)(
-                img_list, f'{self.save_to_path}/{title}', file_name, self.format)
+                img_list, f'{self.save_to_path}/{chapter.title}', file_name, self.format)
         except Exception as e:
             if (e.args and len(e.args) >= 2):
                 logger.error(
-                    f"[{e.args[1]}]: An exception occurred: {e.args[0]}, {chapter['chapterTitle']}")
+                    f"[{e.args[1]}]: An exception occurred: {e.args[0]}, {chapter.chapterTitle}")
                 return chapter
             logger.error(e)
             return chapter
@@ -90,7 +89,7 @@ class Downloader:
 
         # p = ThreadPool(5)
         # pool_output = p.map(sleepy,range(4))    
-        with Pool() as pool:
+        with Pool(self.pool_size) as pool:
             return list(filter(lambda x: not x == None, pool.map(self.pool_worker, self.chapters)))
 
     def retry_pool(self):
