@@ -1,5 +1,4 @@
 import time
-from utils.logger import logger 
 
 def duration(start):
     end = time.time()

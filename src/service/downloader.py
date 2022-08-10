@@ -5,7 +5,7 @@ from utils.logger import logger
 from utils.duration import duration
 from service.save_img import save_images
 from service.get_chapters import get_chapters, get_chapter
-from service.download_img import get_image_list
+from service.download_img import DownloadImg
 from repository.retry_config import save_retry_config
 
 
@@ -68,7 +68,7 @@ class Downloader:
         try:
             title = chapter['title']
             goto_url = chapter['link']
-            img_list = get_image_list(goto_url)
+            img_list = DownloadImg().get_image_list(goto_url)
             if (img_list == None or not img_list):
                 return
             file_name = goto_url.split(
