@@ -1,2 +1,2 @@
-docker build -t snow_test/mangasee -f Dockerfile_test .    
-docker run --rm snow_test/mangasee
+docker build -t snow/mangasee_test -f Dockerfile_test .    
+docker run --rm snow/mangasee_test

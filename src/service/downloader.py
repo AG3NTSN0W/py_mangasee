@@ -52,8 +52,9 @@ class Downloader:
 
     def dowload_all_chapters_start(self):
         self.chapters = get_chapters(self.goto_url)
+        title = self.chapters[0].title
         self.init_pool()
-        self.validate_Chapters(self.chapters[0].title)
+        self.validate_Chapters(title)
         pass
 
     def init_pool(self):
