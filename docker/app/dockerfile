@@ -30,14 +30,10 @@ COPY requirements.txt ./
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY ./src /app
-
-RUN mkdir downloads
-RUN mkdir -p config/retry
-
-WORKDIR /app
+COPY ./docker/app /app/startup
 
 # forward request and error logs to docker log collector
-RUN ln -sf /dev/stdout app.log \
+RUN ln -sf /dev/stdout app.log \ 
 	&& ln -sf /dev/stderr app.log
 
-ENTRYPOINT ["python", "./main.py"]
+ENTRYPOINT ["python", "/app/app.py"]
