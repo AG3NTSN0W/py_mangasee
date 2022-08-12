@@ -18,16 +18,26 @@ Arguments | Function | default | notes
 `-s --splite` | Save chapter image in separate file | False | By default a chapter will be save in one file <br> Pdf format will save manga over mutiple pages
 
 
-- Download all chapter
-    ```
-    bash run.sh -u https://mangasee123.com/rss/<manga_name>.xml
-    ```   
+- CLI
+    - Download all chapter
+        ```
+        bash docker/cli/run.sh -u https://mangasee123.com/rss/<manga_name>.xml
+        ```   
 
-- Download one chapter
-    ```
-    bash run.sh -u https://mangasee123.com/rss/<manga_name>.xml -c 5
-    ```
-
+    - Download one chapter
+        ```
+        bash docker/cli/run.sh -u https://mangasee123.com/rss/<manga_name>.xml -c 5
+        ```
+- APP
+    -   Run App (WIP)
+        ```
+        bash docker/app/run.sh
+        ```  
+- TEST
+    - Run Tests
+        ```
+        bash docker/tests/run.sh 
+        ```  
 
 
 
