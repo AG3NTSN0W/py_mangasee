@@ -1,5 +1,4 @@
 import os
-from traceback import print_tb
 import cv2
 import shutil
 import unittest
@@ -12,10 +11,6 @@ SAVE_PATH = "/downloads"
 
 class TestSaveImg(unittest.TestCase):
 
-    @classmethod
-    def tearDownClass(cls):
-        pass
-
     img_list = []
 
     def __init__(self, *args, **kwargs):
@@ -27,20 +22,24 @@ class TestSaveImg(unittest.TestCase):
         for path in os.listdir(SAVE_PATH):
             nPath = os.path.join(SAVE_PATH, path)
             if os.path.isfile(nPath):
-                os.remove(nPath)  
+                os.remove(nPath)
                 continue
             if (os.path.isdir(nPath)):
-                shutil.rmtree(nPath)  
-                continue    
+                shutil.rmtree(nPath)
+                continue
 
     # SPLIT
     def test_save_images_png_split(self):
-        save_images(True)(self.img_list, f'{SAVE_PATH}', "ave_images_png_split", "png")
-        self.assertTrue(exists(f"{SAVE_PATH}/ave_images_png_split/ave_images_png_split-000.png"))
+        save_images(True)(self.img_list,
+                          f'{SAVE_PATH}', "ave_images_png_split", "png")
+        self.assertTrue(
+            exists(f"{SAVE_PATH}/ave_images_png_split/ave_images_png_split-000.png"))
 
     def test_save_images_pdf_split(self):
-        save_images(True)(self.img_list, f'{SAVE_PATH}', "save_images_pdf_split", "pdf")
-        self.assertTrue(exists(f"{SAVE_PATH}/save_images_pdf_split/save_images_pdf_split-000.pdf"))
+        save_images(True)(self.img_list,
+                          f'{SAVE_PATH}', "save_images_pdf_split", "pdf")
+        self.assertTrue(
+            exists(f"{SAVE_PATH}/save_images_pdf_split/save_images_pdf_split-000.pdf"))
 
     def test_to_file_png(self):
         to_file(self.img_list, f'{SAVE_PATH}', "to_file_png", "png")
@@ -52,7 +51,8 @@ class TestSaveImg(unittest.TestCase):
 
     # MERGE
     def test_save_images_png_merge(self):
-        save_images()(self.img_list, f'{SAVE_PATH}', "save_images_png_merge", "png")
+        save_images()(self.img_list, f'{SAVE_PATH}',
+                      "save_images_png_merge", "png")
         self.assertTrue(exists(f"{SAVE_PATH}/save_images_png_merge.png"))
 
     def test_save_images_pdf_merge(self):

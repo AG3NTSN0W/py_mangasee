@@ -15,17 +15,13 @@ class Chapter():
         self.pubDate = pubDate
         pass
 
-    def get_title(self):
-        return self.title
-
-    def get_chapterTitle(self):
-        return self.chapterTitle
-
-    def get_link(self):
-        return self.link
-
-    def get_pubDate(self):
-        return self.pubDate
+    def to_json(self) -> dict:
+        return {
+            "title": self.title,
+            "chapterTitle": self.chapterTitle,
+            "link": self.link,
+            "pubDate": self.pubDate
+        }
 
 
 def chapter_map(entry, title: str) -> Chapter:
