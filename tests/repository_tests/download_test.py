@@ -38,12 +38,11 @@ class TestDownloadDB(unittest.TestCase):
 
     def test_get_downlaods(self):
         result = self.download.get_download()
-        self.assertEquals(('title_0', 'url_0', 'chapterTitle_0'), result[0].to_tuple())
+        self.assertEquals(
+            ('title_0', 'url_0', 'chapterTitle_0'), result[0].to_tuple())
 
     def test_to_downlaod(self):
         to_download = self.download.to_download()
         self.assertTrue(len(to_download) == 6)
         result = self.download.get_download()
         self.assertTrue(len(result) == 0)
-    
-
