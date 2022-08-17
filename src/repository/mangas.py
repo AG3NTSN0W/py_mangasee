@@ -10,27 +10,27 @@ from repository.database import Database
 # MERGE           BOOLEAN     DEFAULT TRUE
 
 ADD_MANGA = """
-INSERT INTO {table_name}(TITLE, RSS_URL, CHAPTER_COUNT, LATEST_DATE, IMG_URL, FILE_TYPE, MERGE) VALUES(?, ?, ?, ?, ?, ?, ?);
+INSERT INTO {table_name}(TITLE, RSS_URL, LATEST_DATE, IMG_URL, FILE_TYPE, MERGE) VALUES(?, ?, ?, ?, ?, ?);
 """
 
 GET_MANGAS = """
-SELECT ID, TITLE, RSS_URL, CHAPTER_COUNT, LATEST_DATE, IMG_URL, FILE_TYPE, MERGE FROM {table_name};
+SELECT ID, TITLE, RSS_URL, LATEST_DATE, IMG_URL, FILE_TYPE, MERGE FROM {table_name} ;
 """
 
 GET_MANGAS_BY_ID = """
-SELECT ID, TITLE, RSS_URL, CHAPTER_COUNT, LATEST_DATE, IMG_URL, FILE_TYPE, MERGE FROM {table_name} WHERE ID = ?;
+SELECT ID, TITLE, RSS_URL, LATEST_DATE, IMG_URL, FILE_TYPE, MERGE FROM {table_name} WHERE ID = ?;
 """
 
 GET_MANGAS_BY_TITLE = """
-SELECT ID, TITLE, RSS_URL, CHAPTER_COUNT, LATEST_DATE, IMG_URL, FILE_TYPE, MERGE FROM {table_name} WHERE TITLE = ?;
+SELECT ID, TITLE, RSS_URL, LATEST_DATE, IMG_URL, FILE_TYPE, MERGE FROM {table_name} WHERE TITLE = ?;
 """
 
-UPDATE_CHAPTER_COUNT = """
-UPDATE {table_name} SET CHAPTER_COUNT = ?, LATEST_DATE = ? WHERE ID = ?;
+UPDATE_LAST_DATE = """
+UPDATE {table_name} SET LATEST_DATE = ? WHERE ID = ?;
 """
 
 UPDATE_MANGA = """
-UPDATE {table_name} SET TITLE = ?, RSS_URL = ?, CHAPTER_COUNT = ?, LATEST_DATE = ?, IMG_URL = ?, FILE_TYPE = ?, MERGE = ?  WHERE ID = ?;
+UPDATE {table_name} SET TITLE = ?, RSS_URL = ?, LATEST_DATE = ?, IMG_URL = ?, FILE_TYPE = ?, MERGE = ?  WHERE ID = ?;
 """
 
 DELETE_MANGA_BY_ID = """
@@ -40,23 +40,23 @@ DELETE FROM {table_name} WHERE ID=?;
 
 class Manga():
 
-    def __init__(self, id: int, title: str, rssUrl: str, chapterCount: int, latestDate: int, imgUrl: str, fileType: str, merge: bool) -> None:
+    def __init__(self, id: int, title: str, rssUrl: str, latestDate: int, imgUrl: str, fileType: str, merge: bool, count=0) -> None:
         self.id = id
         self.title = title
         self.rssUrl = rssUrl
-        self.chapterCount = chapterCount
         self.latestDate = latestDate
         self.imgUrl = imgUrl
         self.fileType = fileType
         self.merge = merge
+        self.count = count
         pass
 
     @classmethod
-    def constructor(cls, title: str, rssUrl: str, chapterCount: int, latestDate: int, imgUrl: str, fileType: str, merge: bool):
-        return cls(None, title, rssUrl, chapterCount, latestDate, imgUrl, fileType, merge)
+    def constructor(cls, title: str, rssUrl: str, latestDate: int, imgUrl: str, fileType: str, merge: bool):
+        return cls(None, title, rssUrl, latestDate, imgUrl, fileType, merge)
 
     def to_tuple(self) -> tuple:
-        return (self.title, self.rssUrl, self.chapterCount, self.latestDate, self.imgUrl, self.fileType, self.merge)
+        return (self.title, self.rssUrl, self.latestDate, self.imgUrl, self.fileType, self.merge)
 
 
 class Mangas(Database):
@@ -114,12 +114,12 @@ class Mangas(Database):
 
         return cursor.rowcount == 1
 
-    def update_manga_chapter_count(self, id: int, count: int, date: int) -> bool:
-        query = self.query(UPDATE_CHAPTER_COUNT, self.mangas_table_name)
-        logger.info(f"Update manga chapter count ID: [{id}], count: [{count}]")
+    def update_manga_date(self, id: int, date: str) -> bool:
+        query = self.query(UPDATE_LAST_DATE, self.mangas_table_name)
+        logger.info(f"Update manga chapter count ID: [{id}], date: [{date}]")
         with self.get_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute(query, (count, date, id))
+            cursor.execute(query, (date, id))
             conn.commit()
 
         return cursor.rowcount == 1

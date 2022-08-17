@@ -4,7 +4,7 @@ from repository.database import Database
 
 
 SELECT_TO_DOWNLOAD = """
-SELECT TITLE, CHAPTER_URL, CHAPTER_TITLE FROM {table_name} LIMIT 100;
+SELECT ID, TITLE, CHAPTER_URL, CHAPTER_TITLE FROM {table_name} LIMIT 100;
 """
 
 DELETE_TO_DOWNLOAD = """
@@ -12,24 +12,25 @@ DELETE FROM {table_name} LIMIT 100;
 """
 
 ADD_TO_DOWNLOAD = """
-INSERT INTO {table_name}(TITLE, CHAPTER_URL, CHAPTER_TITLE) VALUES(?, ?, ?);
+INSERT INTO {table_name}(ID, TITLE, CHAPTER_URL, CHAPTER_TITLE) VALUES(?, ?, ?, ?);
 """
 
 GET_DOWNLOAD = """
-SELECT TITLE, CHAPTER_URL, CHAPTER_TITLE FROM {table_name};
+SELECT ID, TITLE, CHAPTER_URL, CHAPTER_TITLE FROM {table_name};
 """
 
 
 class Download:
 
-    def __init__(self, title, chapterUrl, chapterTitle) -> None:
+    def __init__(self, id: int, title: str, chapterUrl: str, chapterTitle: str) -> None:
+        self.id = id
         self.title = title
         self.chapterUrl = chapterUrl
         self.chapterTitle = chapterTitle
         pass
 
     def to_tuple(self):
-        return (self.title, self.chapterUrl, self.chapterTitle)
+        return (self.id, self.title, self.chapterUrl, self.chapterTitle)
 
 
 class Downloads(Database):
@@ -53,6 +54,7 @@ class Downloads(Database):
         query = self.query(ADD_TO_DOWNLOAD, self.download_table_name)
         logger.info("Add Chapter to downloads")
         with self.get_connection() as conn:
+            conn.execute("PRAGMA foreign_keys = 1")
             cursor = conn.cursor()
             cursor.execute(query, download.to_tuple())
             conn.commit()
@@ -64,6 +66,7 @@ class Downloads(Database):
         batch = list(map(lambda x: x.to_tuple(), downloads))
         logger.info("Add batch of Chapter to download")
         with self.get_connection() as conn:
+            conn.execute("PRAGMA foreign_keys = 1")
             cursor = conn.cursor()
             cursor.executemany(query, batch)
             conn.commit()

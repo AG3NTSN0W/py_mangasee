@@ -22,7 +22,6 @@ class setupDataBase(Database):
                 ID              INTEGER     PRIMARY KEY     AUTOINCREMENT   NOT NULL,
                 TITLE           CHAR(255)                                   NOT NULL,
                 RSS_URL         TEXT                                        NOT NULL,
-                CHAPTER_COUNT   INTEGER                                     NOT NULL,
                 LATEST_DATE     INTEGER                                     NOT NULL,
                 IMG_URL         TEXT                                        NOT NULL,
                 FILE_TYPE       CHAR(10)    DEFAULT "pdf"                           ,
@@ -37,7 +36,10 @@ class setupDataBase(Database):
                 (
                 TITLE           CHAR(255)     NOT NULL,
                 CHAPTER_URL     TEXT          NOT NULL,
-                CHAPTER_TITLE   CHAR(255)     NOT NULL
+                CHAPTER_TITLE   CHAR(255)     NOT NULL,
+                ID              INTEGER       NOT NULL,
+                FOREIGN KEY(ID) REFERENCES {self.mangas_table_name}(ID)
+                UNIQUE(TITLE)
                 )''')
         pass
 

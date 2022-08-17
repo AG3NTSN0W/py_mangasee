@@ -7,7 +7,7 @@ from repository.chapters import MangaChapter, Mangachapters
 
 MANGA_TEST_DATA = [
     Manga.constructor(
-        f'title_{1}', f'url_{x}', x, x, f'imgUrl_{x}', 'pdf', True) for x in range(5)
+        f'title_{1}', f'url_{x}', x, f'imgUrl_{x}', 'pdf', True) for x in range(5)
 ]
 
 MANGA_CHAPTER_TEST_DATA_ID_1 = [

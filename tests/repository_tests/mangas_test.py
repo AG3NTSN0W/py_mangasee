@@ -6,7 +6,7 @@ from repository.mangas import Mangas, Manga
 
 TEST_DATA = [
     Manga.constructor(
-        f'title_{x}', f'url_{x}', x, x, f'imgUrl_{x}', 'pdf', True) for x in range(5)
+        f'title_{x}', f'url_{x}', x, f'imgUrl_{x}', 'pdf', True) for x in range(5)
 ]
 
 
@@ -40,41 +40,41 @@ class TestMangasDB(unittest.TestCase):
     def test_get_mangas(self):
         result = self.mangas.get_mangas()
         self.assertEquals(
-            ('title_0', 'url_0', 0, 0, 'imgUrl_0', 'pdf', 1), result[0].to_tuple())
+            ('title_0', 'url_0', 0, 'imgUrl_0', 'pdf', 1), result[0].to_tuple())
         self.assertTrue(len(result) == 5)
 
     def test_get_mangas_by_title(self):
         result = self.mangas.get_manga_by_title("title_3")
         self.assertEquals(
-            ('title_3', 'url_3', 3, 3, 'imgUrl_3', 'pdf', 1), result.to_tuple())
+            ('title_3', 'url_3', 3, 'imgUrl_3', 'pdf', 1), result.to_tuple())
 
     def test_get_manga_by_id(self):
         result = self.mangas.get_manga_by_id(4)
         self.assertEquals(
-            ('title_3', 'url_3', 3, 3, 'imgUrl_3', 'pdf', 1), result.to_tuple())
+            ('title_3', 'url_3', 3, 'imgUrl_3', 'pdf', 1), result.to_tuple())
         pass
 
-    def test_update_manga_chapter_count(self):
-        result = self.mangas.update_manga_chapter_count(4, 7, 20)
+    def test_update_manga_date(self):
+        result = self.mangas.update_manga_date(4, 7)
         self.assertTrue(result)
         getManga = self.mangas.get_manga_by_title("title_3")
         self.assertEquals(
-            ('title_3', 'url_3', 7, 20, 'imgUrl_3', 'pdf', 1), getManga.to_tuple())
+            ('title_3', 'url_3', 7, 'imgUrl_3', 'pdf', 1), getManga.to_tuple())
 
     def test_update_manga(self):
         manga = Manga.constructor(
-            f'title_y', f'url_y', 7, 7, f'imgUrl_y', 'pdf', True)
+            f'title_y', f'url_y', 7, f'imgUrl_y', 'pdf', True)
         self.mangas.update_manga(manga, 3)
         getManga = self.mangas.get_manga_by_title("title_y")
         self.assertEquals(
-            (f'title_y', f'url_y', 7, 7, f'imgUrl_y', 'pdf', True), getManga.to_tuple())
+            (f'title_y', f'url_y', 7, f'imgUrl_y', 'pdf', True), getManga.to_tuple())
 
     def test_delete_manga(self):
         result = self.mangas.delete_manga(2)
         self.assertTrue(result)
         result = self.mangas.get_mangas()
         self.assertEquals(
-            ('title_0', 'url_0', 0, 0, 'imgUrl_0', 'pdf', 1), result[0].to_tuple())
+            ('title_0', 'url_0', 0, 'imgUrl_0', 'pdf', 1), result[0].to_tuple())
         self.assertTrue(len(result) == 4)
         pass
     pass
