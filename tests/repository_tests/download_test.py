@@ -27,21 +27,21 @@ class TestDownloadDB(unittest.TestCase):
         self.download.set_path(".")
 
     def addTestData(self) -> None:
-        self.download.add_downlaods(TEST_DATA)
+        self.download.add_downloads(TEST_DATA)
         pass
 
-    def test_add_downlaod(self):
+    def test_add_download(self):
         download = Download("title", "url", "chapterTitle")
-        result = self.download.add_downlaod(download)
+        result = self.download.add_download(download)
         self.assertTrue(result == 1)
         self.assertTrue(len(self.download.get_download()) == 6)
 
-    def test_get_downlaods(self):
+    def test_get_downloads(self):
         result = self.download.get_download()
         self.assertEquals(
             ('title_0', 'url_0', 'chapterTitle_0'), result[0].to_tuple())
 
-    def test_to_downlaod(self):
+    def test_to_download(self):
         to_download = self.download.to_download()
         self.assertTrue(len(to_download) == 6)
         result = self.download.get_download()

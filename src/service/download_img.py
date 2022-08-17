@@ -46,7 +46,7 @@ class DownloadImg():
                     image.shape[1], image.shape[0]))
                 img_list.append(image)
             else:
-                raise Exception(f'Unable to downlaod {image_url}')
+                raise Exception(f'Unable to download {image_url}')
         return img_list
 
     def get_image_list(self, goto_url: str) -> list[cv2.Mat]:

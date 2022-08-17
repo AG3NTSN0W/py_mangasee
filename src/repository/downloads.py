@@ -49,7 +49,7 @@ class Downloads(Database):
             conn.commit()
         return list(map(lambda x: Download(*x), result))
 
-    def add_downlaod(self, download: Download):
+    def add_download(self, download: Download):
         query = self.query(ADD_TO_DOWNLOAD, self.download_table_name)
         logger.info("Add Chapter to downloads")
         with self.get_connection() as conn:
@@ -59,7 +59,7 @@ class Downloads(Database):
 
         return cursor.rowcount
 
-    def add_downlaods(self, downloads: List[Download]):
+    def add_downloads(self, downloads: List[Download]):
         query = self.query(ADD_TO_DOWNLOAD, self.download_table_name)
         batch = list(map(lambda x: x.to_tuple(), downloads))
         logger.info("Add batch of Chapter to download")
