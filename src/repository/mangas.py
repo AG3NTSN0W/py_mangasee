@@ -26,7 +26,7 @@ SELECT ID, TITLE, RSS_URL, CHAPTER_COUNT, LATEST_DATE, IMG_URL, FILE_TYPE, MERGE
 """
 
 UPDATE_CHAPTER_COUNT = """
-UPDATE {table_name} SET CHAPTER_COUNT = ? WHERE ID = ?;
+UPDATE {table_name} SET CHAPTER_COUNT = ?, LATEST_DATE = ? WHERE ID = ?;
 """
 
 UPDATE_MANGA = """
@@ -114,12 +114,12 @@ class Mangas(Database):
 
         return cursor.rowcount == 1
 
-    def update_manga_chapter_count(self, id: int, count: int) -> bool:
+    def update_manga_chapter_count(self, id: int, count: int, date: int) -> bool:
         query = self.query(UPDATE_CHAPTER_COUNT, self.mangas_table_name)
         logger.info(f"Update manga chapter count ID: [{id}], count: [{count}]")
         with self.get_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute(query, (count, id))
+            cursor.execute(query, (count, date, id))
             conn.commit()
 
         return cursor.rowcount == 1

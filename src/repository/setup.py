@@ -52,5 +52,6 @@ class setupDataBase(Database):
                 TOTAL_PAGES     INTEGER     DEFAULT 0           ,
                 ID              INTEGER                 NOT NULL,
                 FOREIGN KEY(ID) REFERENCES {self.mangas_table_name}(ID)
+                UNIQUE(CHAPTER_TITLE)
                 )''')
         pass

@@ -22,8 +22,6 @@ def get_retry_config(file_name) -> list[dict]:
     except:
         return []
 
-# Need to update the chapter type
-
 
 def save_retry_config(chapters: Chapter) -> None:
     try:

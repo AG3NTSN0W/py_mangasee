@@ -55,11 +55,11 @@ class TestMangasDB(unittest.TestCase):
         pass
 
     def test_update_manga_chapter_count(self):
-        result = self.mangas.update_manga_chapter_count(4, 7)
+        result = self.mangas.update_manga_chapter_count(4, 7, 20)
         self.assertTrue(result)
         getManga = self.mangas.get_manga_by_title("title_3")
         self.assertEquals(
-            ('title_3', 'url_3', 7, 3, 'imgUrl_3', 'pdf', 1), getManga.to_tuple())
+            ('title_3', 'url_3', 7, 20, 'imgUrl_3', 'pdf', 1), getManga.to_tuple())
 
     def test_update_manga(self):
         manga = Manga.constructor(
