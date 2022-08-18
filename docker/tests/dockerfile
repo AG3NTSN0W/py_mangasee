@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM python:3
 
 ENV GECKODRIVER_VER v0.30.0
 ENV FIREFOX_VER 87.0
@@ -18,7 +18,7 @@ RUN set -x \
    && tar -jxf firefox-* \
    && mv firefox /opt/ \
    && chmod 755 /opt/firefox \
-   && chmod 755 /opt/firefox/firefox      
+   && chmod 755 /opt/firefox/firefox    
 
 # Add geckodriver
 RUN set -x \

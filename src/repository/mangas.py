@@ -72,7 +72,7 @@ class Mangas(Database):
             cursor.execute(query, manga.to_tuple())
             conn.commit()
 
-        return cursor.rowcount == 1
+        return cursor.lastrowid
 
     def get_mangas(self) -> list[Manga]:
         query = self.query(GET_MANGAS, self.mangas_table_name)
