@@ -25,7 +25,7 @@ class TestDownloadDB(unittest.TestCase):
 
     def tearDown(self):
         db_path = os.path.join(self.mangas.path, self.mangas.db_name)
-        os.remove('{db_path}.db'.format(db_path=db_path))
+        os.remove('{db_path}.sqlite3'.format(db_path=db_path))
 
     def setup(self) -> None:
         self.dataBase = setupDataBase()

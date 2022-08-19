@@ -1,7 +1,4 @@
-import sqlite3
-
 from repository.database import Database
-
 
 class setupDataBase(Database):
 
@@ -15,7 +12,7 @@ class setupDataBase(Database):
         pass
 
     def create_manga_table(self):
-        with sqlite3.connect(f'{self.path}/{self.db_name}.db') as conn:
+        with self.get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute(f'''CREATE TABLE IF NOT EXISTS {self.mangas_table_name}
                 (
@@ -30,7 +27,7 @@ class setupDataBase(Database):
         pass
 
     def create_download_table(self):
-        with sqlite3.connect(f'{self.path}/{self.db_name}.db') as conn:
+        with self.get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute(f'''CREATE TABLE IF NOT EXISTS {self.download_table_name}
                 (
@@ -39,12 +36,12 @@ class setupDataBase(Database):
                 CHAPTER_TITLE   CHAR(255)     NOT NULL,
                 ID              INTEGER       NOT NULL,
                 FOREIGN KEY(ID) REFERENCES {self.mangas_table_name}(ID)
-                UNIQUE(TITLE)
+                UNIQUE(CHAPTER_TITLE)
                 )''')
         pass
 
     def create_chapters_table(self):
-        with sqlite3.connect(f'{self.path}/{self.db_name}.db') as conn:
+        with self.get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute(f'''CREATE TABLE IF NOT EXISTS {self.chapters_table_name}
                 (

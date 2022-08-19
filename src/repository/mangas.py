@@ -13,46 +13,46 @@ ADD_MANGA = """
 INSERT INTO {table_name}(TITLE, RSS_URL, LATEST_DATE, IMG_URL, FILE_TYPE, MERGE) VALUES(?, ?, ?, ?, ?, ?);
 """
 
-# SELECT ID, TITLE, RSS_URL, LATEST_DATE, IMG_URL, FILE_TYPE, MERGE FROM {table_name} ;
 GET_MANGAS = """
-SELECT 
-    M.ID,
-    M.TITLE,
-    M.RSS_URL,
-    M.LATEST_DATE,
-    M.IMG_URL,
-    M.FILE_TYPE,
-    M.MERGE,
-    (D.CNT + C.CNT)
-    MERGE FROM {table_name} AS M 
-    LEFT JOIN
-        (SELECT ID, COUNT(ID) AS CNT FROM {D}) AS D
-        ON M.ID=D.ID
-    LEFT JOIN
-        (SELECT ID, COUNT(ID) AS CNT FROM {C}) AS C
-        ON M.ID=C.ID    
-    GROUP BY M.ID;
+SELECT
+	M.ID,
+	M.TITLE,
+	M.RSS_URL,	
+	M.LATEST_DATE,
+	M.IMG_URL,
+	M.FILE_TYPE,
+	M.MERGE,
+	(count(DISTINCT D.CHAPTER_TITLE) + count(DISTINCT C.CHAPTER_TITLE)) AS count
+FROM
+	{table_name} AS M
+left join {D} AS D ON
+	M.ID = D.ID
+left join {C} AS C ON
+	M.ID = C.ID
+GROUP BY
+	M.id;
 """
 
 GET_MANGAS_BY_ID = """
-SELECT 
-    M.ID,
-    M.TITLE,
-    M.RSS_URL,
-    M.LATEST_DATE,
-    M.IMG_URL,
-    M.FILE_TYPE,
-    M.MERGE,
-    (D.CNT + C.CNT)
-    MERGE FROM {table_name} AS M 
-    LEFT JOIN
-        (SELECT COUNT(ID) AS CNT FROM {D}) AS D
-        ON M.ID=ID
-    LEFT JOIN
-        (SELECT COUNT(ID) AS CNT FROM {C}) AS C
-        ON M.ID=ID    
-    WHERE M.ID = ?    
-    GROUP BY M.ID;
+SELECT
+	M.ID,
+	M.TITLE,
+	M.RSS_URL,	
+	M.LATEST_DATE,
+	M.IMG_URL,
+	M.FILE_TYPE,
+	M.MERGE,
+	(count(DISTINCT D.CHAPTER_TITLE) + count(DISTINCT C.CHAPTER_TITLE)) AS count
+FROM
+	{table_name} AS M
+left join {D} AS D ON
+	M.ID = D.ID
+left join {C} AS C ON
+	M.ID = C.ID
+WHERE 
+    M.ID = ?    
+GROUP BY
+	M.id;
 """
 
 GET_MANGAS_BY_TITLE = """
@@ -91,6 +91,9 @@ class Manga():
 
     def to_tuple(self) -> tuple:
         return (self.title, self.rssUrl, self.latestDate, self.imgUrl, self.fileType, self.merge)
+
+    def to_download(self) -> tuple:
+        return (self.title, self.rssUrl, self.latestDate, self.fileType, self.merge, self.count)   
 
 
 class Mangas(Database):
