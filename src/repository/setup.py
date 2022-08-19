@@ -19,12 +19,12 @@ class setupDataBase(Database):
             cursor = conn.cursor()
             cursor.execute(f'''CREATE TABLE IF NOT EXISTS {self.mangas_table_name}
                 (
-                ID              INTEGER     PRIMARY KEY     AUTOINCREMENT   NOT NULL,
-                TITLE           CHAR(255)                                   NOT NULL,
-                RSS_URL         TEXT                                        NOT NULL,
-                LATEST_DATE     INTEGER                                     NOT NULL,
-                IMG_URL         TEXT                                        NOT NULL,
-                FILE_TYPE       CHAR(10)    DEFAULT "pdf"                           ,
+                ID              INTEGER     PRIMARY KEY     NOT NULL,
+                TITLE           CHAR(255)                   NOT NULL,
+                RSS_URL         TEXT                        NOT NULL,
+                LATEST_DATE     INTEGER                     NOT NULL,
+                IMG_URL         TEXT                        NOT NULL,
+                FILE_TYPE       CHAR(10)    DEFAULT "pdf"   ,
                 MERGE           BOOLEAN     DEFAULT TRUE   
                 )''')
         pass

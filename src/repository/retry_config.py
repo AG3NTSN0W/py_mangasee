@@ -23,15 +23,16 @@ def get_retry_config(file_name) -> list[dict]:
         return []
 
 
-def save_retry_config(chapters: Chapter) -> None:
+def save_retry_config(chapters: list[Chapter]) -> None:
     try:
         title = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
         if(not os.path.exists(get_retry_path())):
             logging.debug(f"Add missing retry config dir")
             os.makedirs(f"{get_retry_path()}")
         logging.debug(f"Saving retry config: [{title}]")
+        chapters_json = list(map(lambda x: x.to_json(), chapters)) 
         with open(f"{get_retry_path()}/{title}.json", "w+") as outfile:
-            json.dump(chapters, outfile)
+            json.dump(chapters_json, outfile)
         pass
     except Exception as e:
         logging.error(f"unable to save retry config: {e}")

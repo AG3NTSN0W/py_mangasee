@@ -50,6 +50,7 @@ class DownloadImg():
         return img_list
 
     def get_image_list(self, goto_url: str) -> list[cv2.Mat]:
+        # raise DownloadException("e", "download_img")
         try:
             start = time.time()
             image_list = get_manga_images(goto_url)

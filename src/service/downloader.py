@@ -4,7 +4,7 @@ import time
 from utils.logger import logger
 from utils.duration import duration
 from service.save_img import save_images
-from service.get_chapters import get_chapters, get_chapter
+from service.get_chapters import Chapter, get_chapters, get_chapter
 from service.download_img import DownloadImg
 from repository.retry_config import save_retry_config
 
@@ -35,9 +35,9 @@ class Downloader:
     def dowload_chapter(self, goto_url, chapter):
         try:
             self.chapters = get_chapter(goto_url, chapter)
-            
+
             if self.hasChapters():
-                self.init_pool()
+                self.init_cli_pool()
             else:
                 logger.error(
                     f"Chapter: [{chapter}] Not found for {self.title}")
@@ -47,23 +47,27 @@ class Downloader:
 
     def retry_chapters(self, chapters):
         self.chapters = chapters
-        self.init_pool()
+        self.init_cli_pool()
     pass
 
     def dowload_all_chapters_start(self):
         self.chapters = get_chapters(self.goto_url)
         title = self.chapters[0].title
-        self.init_pool()
+        self.init_cli_pool()
         self.validate_Chapters(title)
         pass
 
-    def init_pool(self):
+    def init_cli_pool(self):
         if(not self.hasChapters()):
             raise Exception("No chapters found")
         self.total_chapters = len(self.chapters)
         # self.chapters = self.chapters[:1]
         self.chapters = self.pool_handler()
-        self.retry_pool()
+        self.retry_pool(save_retry_config)
+
+    def init_app_pool(self, chapters: list[Chapter]):
+        self.chapters = chapters
+        self.chapters = self.pool_handler()
 
     def pool_worker(self, chapter):
         try:
@@ -73,7 +77,7 @@ class Downloader:
                 return
             file_name = goto_url.split(
                 "/")[-1].replace(".html", "").replace("-", " ")
-        
+
             save_images(self.split)(
                 img_list, f'{self.save_to_path}/{chapter.title}', file_name, self.format)
         except Exception as e:
@@ -87,26 +91,23 @@ class Downloader:
     def pool_handler(self):
         if(not self.hasChapters()):
             return
-
-        # p = ThreadPool(5)
-        # pool_output = p.map(sleepy,range(4))    
         with Pool(self.pool_size) as pool:
             return list(filter(lambda x: not x == None, pool.map(self.pool_worker, self.chapters)))
 
-    def retry_pool(self):
+    def retry_pool(self, fallback):
         count = 0
         # Check if there are chapters that faild to download.
         if(self.hasChapters()):
             while count < 2:
-                logger.error(f"Retrying missing Chapter: [{count}], Total: [{len(self.chapters)}]")
+                logger.error(
+                    f"[{count}] Retrying missing Chapter Total: [{len(self.chapters)}]")
                 self.chapters = self.pool_handler()
                 # Check if there are chapters that faild to download.
                 if(not self.hasChapters()):
                     break
                 count += 1
-        if(self.hasChapters()):
-            save_retry_config(self.chapters)
-            return
+        if(self.hasChapters()):        
+            fallback(self.chapters)
 
     # validate that all chapter were downloaded
     def validate_Chapters(self, title):

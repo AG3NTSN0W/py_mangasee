@@ -1,5 +1,6 @@
 requests
 opencv-python
+apscheduler
 asyncio
 beautifulsoup4
 numpy

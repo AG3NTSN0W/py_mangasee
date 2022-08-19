@@ -67,7 +67,7 @@ def arguments():
     return parser
 
 if __name__ == "__main__":
-    
+
     start(arguments().parse_args())
     # retry_from_config()
 
