@@ -27,6 +27,20 @@ UPDATE_CHAPTER = """
 UPDATE {table_name} SET DOWNLOAD_DATE = ?, TOTAL_IMAGES = ?, TOTAL_PAGES = ? WHERE ID = ? AND CHAPTER_TITLE = ?;
 """
 
+GET_ALL_CHAPTERS = """
+select
+	CHAPTER_TITLE
+from
+	{D}
+WHERE ID = ?
+union all
+select
+	CHAPTER_TITLE
+from
+	{C}
+WHERE ID = ?	
+"""
+
 
 class MangaChapter():
 
@@ -58,7 +72,6 @@ class Mangachapters(Database):
             cursor = conn.cursor()
             cursor.execute(query, chapter.to_tuple())
             conn.commit()
-
         return cursor.rowcount == 1
 
     def get_manga_chapter(self, id: int) -> list[MangaChapter]:
@@ -70,6 +83,17 @@ class Mangachapters(Database):
             result = cursor.fetchall()
 
         return list(map(lambda x: MangaChapter(*x), result))
+
+# TODO: Add tests
+    def get_all_manga_chapters(self, id: int) -> list[str]:
+        query = GET_ALL_CHAPTERS.format(
+            D=self.download_table_name, C=self.chapters_table_name)
+        logger.info("Get all chapters form downlaod and chapter table")
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(query, [id, id])
+            result = cursor.fetchall()
+        return list(map(lambda r: r[0], result))
 
     def delete_manga_chapters(self, id: int) -> bool:
         query = self.query(DELETE_CHAPTERS, self.chapters_table_name)

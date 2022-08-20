@@ -18,9 +18,11 @@ def to_pdf(im_v, img_name: str) -> None:
             chunks = np.array_split(im_v, chunk)
             c = list(map(lambda x: Image.fromarray(x), chunks))
             c[0].save(f'{img_name}.pdf', save_all=True, append_images=c[1:])
+            return (chunk)
         else:
             im_pil = Image.fromarray(im_v)
-            im_pil.save(f'{img_name}.pdf')               
+            im_pil.save(f'{img_name}.pdf') 
+            return (chunk)              
     except Exception as e:
         logger.error(f"An exception occurred: {e}: Saving to png instead")  
         to_png(im_v, img_name)
@@ -37,15 +39,16 @@ def to_file(img_list, path: str, file_name: str, type="pdf") -> None:
         indexFormat = '{:03}'.format(idx)
         img_name = os.path.join(path_name, f"{file_name}-{indexFormat}")
         logger.debug(f"Saving the image to a file: {img_name}.{type}")
-        save_type(type)(img, img_name)
+        return save_type(type)(img, img_name)
  
 
 def merge_all(img_list: list[cv2.Mat], path: str, file_name: str, type="pdf") -> None:
     logger.info(f"[{file_name}]: All Image dowloaded starting with merge ...")
     os.makedirs(f"{path}", exist_ok=True)
     img_name = os.path.join(path, file_name)
-    save_type(type)(cv2.vconcat(img_list), img_name)
+    chunk = save_type(type)(cv2.vconcat(img_list), img_name)
     logger.info(f'Chapter saved: {file_name}.{type}')
+    return chunk
 
 
 def save_images(split=False):
