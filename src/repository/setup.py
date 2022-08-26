@@ -21,8 +21,9 @@ class setupDataBase(Database):
                 RSS_URL         TEXT                        NOT NULL,
                 LATEST_DATE     INTEGER                     NOT NULL,
                 IMG_URL         TEXT                        NOT NULL,
-                FILE_TYPE       CHAR(10)    DEFAULT "pdf"   ,
-                MERGE           BOOLEAN     DEFAULT TRUE   
+                FILE_TYPE       CHAR(10)    DEFAULT "pdf"           ,
+                MERGE           BOOLEAN     DEFAULT TRUE            ,
+                UNIQUE(RSS_URL, TITLE)
                 )''')
         pass
 
@@ -35,6 +36,7 @@ class setupDataBase(Database):
                 CHAPTER_URL     TEXT          NOT NULL,
                 CHAPTER_TITLE   CHAR(255)     NOT NULL,
                 ID              INTEGER       NOT NULL,
+                RETRY_COUNT     INTEGER       DEFAULT 0, 
                 FOREIGN KEY(ID) REFERENCES {self.mangas_table_name}(ID)
                 UNIQUE(CHAPTER_TITLE)
                 )''')

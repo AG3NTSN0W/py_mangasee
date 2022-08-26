@@ -10,27 +10,28 @@ SELECT
 	D.CHAPTER_URL,
 	D.CHAPTER_TITLE,
 	M.FILE_TYPE,
-	M."MERGE" 
+	M."MERGE",
+    D.RETRY_COUNT
 FROM
 	{table_name} AS D
 INNER join {M} AS M ON
 	M.ID = D.ID	
-ORDER BY D.CHAPTER_TITLE
-LIMIT 100;
+WHERE D.RETRY_COUNT < 3      
+ORDER BY D.CHAPTER_TITLE  
+LIMIT 50;
 """
-
 
 DELETE_TO_DOWNLOAD = """
 DELETE
 FROM
 	{table_name} AS D
+WHERE D.RETRY_COUNT < 3         
 ORDER BY D.CHAPTER_TITLE  
-LIMIT 100;
+LIMIT 50;
 """
 
-
 ADD_TO_DOWNLOAD = """
-INSERT INTO {table_name}(ID, TITLE, CHAPTER_URL, CHAPTER_TITLE) VALUES(?, ?, ?, ?);
+INSERT INTO {table_name}(ID, TITLE, CHAPTER_URL, CHAPTER_TITLE, RETRY_COUNT) VALUES(?, ?, ?, ?, ?);
 """
 
 GET_DOWNLOAD = """
@@ -38,19 +39,21 @@ SELECT ID, TITLE, CHAPTER_URL, CHAPTER_TITLE FROM {table_name};
 """
 # 594
 
+
 class Download:
 
-    def __init__(self, id: int, title: str, link: str, chapterTitle: str, fileType: str = 'pdf', merge: int = 1) -> None:
+    def __init__(self, id: int, title: str, link: str, chapterTitle: str, fileType: str = 'pdf', merge: int = 1, retryCount: int = 0) -> None:
         self.id = id
         self.title = title
         self.link = link
         self.chapterTitle = chapterTitle
         self.fileType = fileType
         self.merge = bool(merge)
+        self.retryCount = retryCount
         pass
 
     def to_tuple(self):
-        return (self.id, self.title, self.link, self.chapterTitle)
+        return (self.id, self.title, self.link, self.chapterTitle, self.retryCount)
 
 
 class Downloads(Database):

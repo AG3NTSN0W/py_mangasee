@@ -1,3 +1,4 @@
+import re
 from utils.logger import logger
 from repository.database import Database
 
@@ -58,6 +59,15 @@ class MangaChapter():
     def to_update(self) -> tuple:
         return (self.downloadDate, self.totalImages, self.totalPages)
 
+    def to_json(self) -> dict:
+        return {
+            "id": self.id,
+            "chapterTitle": self.chapterTitle,
+            "downloadDate": self.downloadDate,
+            "totalImages":  self.totalImages,
+            "totalPages": self.totalPages
+        }
+
 
 class Mangachapters(Database):
 
@@ -88,12 +98,14 @@ class Mangachapters(Database):
     def get_all_manga_chapters(self, id: int) -> list[str]:
         query = GET_ALL_CHAPTERS.format(
             D=self.download_table_name, C=self.chapters_table_name)
-        logger.info("Get all chapters form downlaod and chapter table")
+        logger.info(f"Get all chapters form downlaod and chapter table ID: {id}")
         with self.get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute(query, [id, id])
             result = cursor.fetchall()
-        return list(map(lambda r: r[0], result))
+        resultList = list(map(lambda r: r[0], result))
+        resultList.sort(reverse=True, key=alphanum_key)
+        return resultList
 
     def delete_manga_chapters(self, id: int) -> bool:
         query = self.query(DELETE_CHAPTERS, self.chapters_table_name)
@@ -124,3 +136,14 @@ class Mangachapters(Database):
             conn.commit()
 
         return cursor.rowcount == 1
+
+
+def tryint(s):
+    try:
+        return int(s)
+    except ValueError:
+        return s
+
+
+def alphanum_key(s):
+    return [tryint(c) for c in re.split('([0-9]+)', s)]

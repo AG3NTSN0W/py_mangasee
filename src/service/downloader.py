@@ -7,9 +7,13 @@ from repository.chapters import MangaChapter, Mangachapters
 from utils.logger import logger
 from utils.duration import duration
 from service.save_img import save_images
-from service.get_chapters import get_chapters, get_chapter
+from service.get_chapters import Chapter, get_chapters, get_chapter
 from service.download_img import DownloadImg
 from repository.retry_config import save_retry_config
+
+def increment_retry_count(download: Download):
+    download.retryCount += 1
+    return download
 
 
 class Downloader:
@@ -71,19 +75,16 @@ class Downloader:
     def init_app_pool(self, chapters: list[Download]):
         self.chapters = chapters
         self.chapters = self.pool_handler(self.app_pool_worker)
-        self.retry_pool(self.app_pool_worker, Downloads().add_downloads)
+        self.retry_pool(self.app_pool_worker, self.app_retry_fallback)
 
-    def pool_worker(self, chapter):
+    def pool_worker(self, chapter: Chapter):
         try:
             goto_url = chapter.link
             img_list = DownloadImg().get_image_list(goto_url)
             if (img_list == None or not img_list):
                 return
-            file_name = goto_url.split(
-                "/")[-1].replace(".html", "").replace("-", " ")
-
             save_images(self.split)(
-                img_list, f'{self.save_to_path}/{chapter.title}', file_name, self.format)
+                img_list, f'{self.save_to_path}/{chapter.title}', chapter.chapterTitle, self.format)
         except Exception as e:
             if (e.args and len(e.args) >= 2):
                 logger.error(
@@ -97,6 +98,7 @@ class Downloader:
             img_list = DownloadImg().get_image_list(chapter.link)
             if (img_list == None or not img_list):
                 return
+            logger.error(chapter.to_tuple())    
             chunk = save_images(not chapter.merge)(
                 img_list, f'{self.save_to_path}/{chapter.title}', chapter.chapterTitle, chapter.fileType)
             date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
@@ -131,6 +133,9 @@ class Downloader:
         if(self.hasChapters()):
             fallback(self.chapters)
 
+    def app_retry_fallback(self, downlaods: list[Download]):
+        Downloads().add_downloads(list(map(increment_retry_count, downlaods))  )    
+
     # validate that all chapter were downloaded
     def validate_Chapters(self, title):
         path = f"{self.save_to_path}/{title}"
@@ -148,3 +153,4 @@ class Downloader:
 
     def hasChapters(self):
         return (self.chapters and not self.chapters == None and len(self.chapters) > 0)
+

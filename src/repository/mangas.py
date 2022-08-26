@@ -93,7 +93,18 @@ class Manga():
         return (self.title, self.rssUrl, self.latestDate, self.imgUrl, self.fileType, self.merge)
 
     def to_download(self) -> tuple:
-        return (self.title, self.rssUrl, self.latestDate, self.fileType, self.merge, self.count)   
+        return (self.title, self.rssUrl, self.latestDate, self.fileType, self.merge, self.count) 
+
+    def to_json(self) -> dict:
+        return {
+            "id": self.id, 
+            "title": self.title,
+            "rssUrl": self.rssUrl,
+            "latestDate":  self.latestDate,
+            "fileType": self.fileType,
+            "merge": self.merge,
+            "imgUrl": self.imgUrl
+        }     
 
 
 class Mangas(Database):

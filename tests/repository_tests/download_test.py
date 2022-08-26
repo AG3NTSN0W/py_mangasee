@@ -54,7 +54,7 @@ class TestDownloadDB(unittest.TestCase):
     def test_get_downloads(self):
         result = self.download.get_download()
         self.assertEquals(
-            (1, 'title_0', 'url_0', 'chapterTitle_0'), result[0].to_tuple())
+            (1, 'title_0', 'url_0', 'chapterTitle_0', 0), result[0].to_tuple())
 
     def test_to_download(self):
         to_download = self.download.to_download()

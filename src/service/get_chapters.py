@@ -1,7 +1,7 @@
-from mimetypes import init
 import requests
 import datetime
 from bs4 import BeautifulSoup
+from repository.mangas import Manga
 
 from utils.logger import logger
 
@@ -56,6 +56,19 @@ def get_chapter(url: str, chapter: str) -> list[Chapter]:
         entries = list(
             filter(lambda x: x.chapterTitle.split()[-1] == chapter, items))
         return entries
+    except Exception as e:
+        logger.error(f"Unable to get chapters: {e}")
+        return None
+
+def get_manga_info(url: str, fileType: str = 'pdf', merge: bool = True) -> Manga:
+    try:
+        page = requests.get(url)
+        soup = BeautifulSoup(page.content, 'xml')
+        img = soup.find('image')
+        title = img.title.text
+        imgUrl = img.url.text
+        latestDate = datetime.datetime.strptime(f"{soup.find_all('item')[0].pubDate.text}", '%a, %d %b %Y %H:%M:%S %z').timestamp()
+        return Manga.constructor(title, url, latestDate, imgUrl, fileType, merge)
     except Exception as e:
         logger.error(f"Unable to get chapters: {e}")
         return None
