@@ -1,3 +1,4 @@
+
 import os
 import asyncio
 from service.downloader import Downloader
@@ -6,15 +7,20 @@ from utils.logger import logger
 from repository.mangas import Manga, Mangas
 from repository.downloads import Download, Downloads
 from repository.chapters import MangaChapter, Mangachapters
+from resource.manga import bp as mangas_bp
+from resource.chapter import bp as chapters_bp
+
 
 from service.get_chapters import Chapter, get_chapters
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
+from flask import Flask
 
 def get_missing_chapters(manga: Manga) -> list[Download]:
     all_chapters = get_chapters(manga.rssUrl)
     all_chapter_len = len(all_chapters)
     missing_chapters = []
+    logger.info(f"Available Manga count: [{all_chapter_len}], Curent Manga count [{manga.count}]")
     if (not manga.count == all_chapter_len):
         missing_count = all_chapter_len - manga.count
         break_on_count = 0
@@ -43,10 +49,11 @@ class AppScheduler():
     def start_scheduler():
         try:
             scheduler = AsyncIOScheduler()
-            scheduler.add_job(AppScheduler.queue_latest_chapters, 'cron',
-                              hour='23', minute='25', max_instances=1)            
-            scheduler.add_job(AppScheduler.dowload_chapters,
-                              'cron', minute='1', hour="*/3", max_instances=1)
+            scheduler.add_job(AppScheduler.queue_latest_chapters, 'interval',
+                              hours=1)
+            scheduler.add_job(AppScheduler.dowload_chapters, 'interval',
+                              hours=3)
+            scheduler.add_job(AppScheduler.flask)                
             scheduler.start()
             asyncio.get_event_loop().run_forever()
         except Exception as e:
@@ -87,4 +94,11 @@ class AppScheduler():
                     logger.warn(
                         f"Unable to add chapter to db: [{chapterTitle}]")
 
-        pass
+    @staticmethod
+    def flask():
+        app = Flask(__name__)
+        app.register_blueprint(mangas_bp)
+        app.register_blueprint(chapters_bp)
+        app.run(host='0.0.0.0', port=80)
+
+    pass
