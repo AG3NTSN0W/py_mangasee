@@ -50,9 +50,9 @@ class AppScheduler():
         try:
             scheduler = AsyncIOScheduler()
             scheduler.add_job(AppScheduler.queue_latest_chapters, 'interval',
-                              hours=1)
+                              hours=1, max_instances=1)
             scheduler.add_job(AppScheduler.dowload_chapters, 'interval',
-                              hours=3)
+                              hours=3, max_instances=1)
             scheduler.add_job(AppScheduler.flask)                
             scheduler.start()
             asyncio.get_event_loop().run_forever()
