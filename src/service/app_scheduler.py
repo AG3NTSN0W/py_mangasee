@@ -43,13 +43,10 @@ class AppScheduler():
     def start_scheduler():
         try:
             scheduler = AsyncIOScheduler()
-            # scheduler.add_job(AppScheduler.queue_latest_chapters, 'cron',
-            #                   hour='23', minute='25', max_instances=1)
-            # scheduler.add_job(AppScheduler.dowload_chaters, 'cron', hour='3', max_instances=1)
-            # scheduler.add_job(AppScheduler.queue_latest_chapters,
-            #                   'cron', minute='*/1', max_instances=1)
+            scheduler.add_job(AppScheduler.queue_latest_chapters, 'cron',
+                              hour='23', minute='25', max_instances=1)            
             scheduler.add_job(AppScheduler.dowload_chapters,
-                              'cron', minute='*/1', max_instances=1)
+                              'cron', minute='1', hour="*/3", max_instances=1)
             scheduler.start()
             asyncio.get_event_loop().run_forever()
         except Exception as e:
