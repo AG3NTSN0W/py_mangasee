@@ -21,6 +21,7 @@ RUN set -x \
    && chmod 755 /opt/firefox/firefox      
 
 # Add geckodriver
+# https://github.com/jamesmortensen/geckodriver-arm-binaries/releases/download/${GECKODRIVER_VER}/geckodriver-${GECKODRIVER_VER}-linux-armv7l.tar.gz
 RUN set -x \
    && curl -sSLO https://github.com/mozilla/geckodriver/releases/download/${GECKODRIVER_VER}/geckodriver-${GECKODRIVER_VER}-linux64.tar.gz \
    && tar zxf geckodriver-*.tar.gz \
