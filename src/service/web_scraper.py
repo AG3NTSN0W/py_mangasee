@@ -10,8 +10,7 @@ from utils.logger import logger
 
 
 def get_driver():
-    # FireFox binary path (Must be absolute path)
-    FIREFOX_BINARY = FirefoxBinary('/opt/firefox/firefox')
+    EXECUTABLE_PATH = "/usr/bin/geckodriver"
     
     # FireFox PROFILE
     PROFILE = webdriver.FirefoxProfile()
@@ -19,7 +18,6 @@ def get_driver():
     PROFILE.set_preference("browser.cache.memory.enable", False)
     PROFILE.set_preference("browser.cache.offline.enable", False)
     PROFILE.set_preference("network.http.use-cache", False)
-    PROFILE.set_preference("general.useragent.override","Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:72.0) Gecko/20100101 Firefox/72.0")
     
     # FireFox Options
     FIREFOX_OPTS = Options()
@@ -27,10 +25,10 @@ def get_driver():
     FIREFOX_OPTS.headless = True
     GECKODRIVER_LOG = '/geckodriver.log'
     ff_opt = {
-		"firefox_binary": FIREFOX_BINARY,
 		"firefox_profile": PROFILE,
 		"options": FIREFOX_OPTS,
-		"service_log_path": GECKODRIVER_LOG
+		"service_log_path": GECKODRIVER_LOG,
+        "executable_path": EXECUTABLE_PATH
 	}
     return webdriver.Firefox(**ff_opt)
 
