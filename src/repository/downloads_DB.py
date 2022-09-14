@@ -1,4 +1,3 @@
-from typing import List
 from utils.logger import logger
 from repository.database import Database
 

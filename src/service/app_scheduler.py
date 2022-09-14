@@ -4,11 +4,12 @@ import asyncio
 from service.downloader import Downloader
 from utils.logger import logger
 
-from repository.mangas import Manga, Mangas
-from repository.downloads import Download, Downloads
-from repository.chapters import MangaChapter, Mangachapters
+from repository.mangas_DB import Manga, Mangas
+from repository.downloads_DB import Download, Downloads
+from repository.chapters_DB import MangaChapter, Mangachapters
 from resource.manga import bp as mangas_bp
 from resource.chapter import bp as chapters_bp
+from resource.notification import bp as noti_bp
 
 
 from service.get_chapters import Chapter, get_chapters
@@ -99,6 +100,7 @@ class AppScheduler():
         app = Flask(__name__)
         app.register_blueprint(mangas_bp)
         app.register_blueprint(chapters_bp)
+        app.register_blueprint(noti_bp)
         app.run(host='0.0.0.0', port=80)
 
     pass

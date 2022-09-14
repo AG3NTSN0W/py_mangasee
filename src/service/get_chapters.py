@@ -1,7 +1,7 @@
 import requests
 import datetime
 from bs4 import BeautifulSoup
-from repository.mangas import Manga
+from repository.mangas_DB import Manga
 
 from utils.logger import logger
 

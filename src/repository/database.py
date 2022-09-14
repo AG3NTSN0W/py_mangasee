@@ -11,6 +11,8 @@ class Database():
         self.download_table_name = 'downloads'
         self.mangas_table_name = 'mangas'
         self.chapters_table_name = 'chapters'
+        self.notification_table_name = 'notification'
+        self.config_table_name = 'config'
         pass
 
     def set_path(self, path) -> None:

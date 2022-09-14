@@ -2,14 +2,15 @@ from multiprocessing.dummy import Pool
 import os
 import time
 from datetime import datetime
-from repository.downloads import Download, Downloads
-from repository.chapters import MangaChapter, Mangachapters
+from repository.downloads_DB import Download, Downloads
+from repository.chapters_DB import MangaChapter, Mangachapters
 from utils.logger import logger
 from utils.duration import duration
 from service.save_img import save_images
 from service.get_chapters import Chapter, get_chapters, get_chapter
 from service.download_img import DownloadImg
 from repository.retry_config import save_retry_config
+from service.notification import Notification as noti
 
 def increment_retry_count(download: Download):
     download.retryCount += 1
@@ -103,6 +104,7 @@ class Downloader:
             date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
             Mangachapters().add_chapter(MangaChapter(
                 chapter.id, chapter.chapterTitle, date, len(img_list), chunk))
+            noti().send(chapter.chapterTitle)
         except Exception as e:
             if (e.args and len(e.args) >= 2):
                 logger.error(

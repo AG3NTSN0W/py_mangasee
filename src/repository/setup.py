@@ -9,6 +9,8 @@ class setupDataBase(Database):
         self.create_manga_table()
         self.create_download_table()
         self.create_chapters_table()
+        self.create_notification_table()
+        self.create_config_table()
         pass
 
     def create_manga_table(self):
@@ -54,5 +56,28 @@ class setupDataBase(Database):
                 ID              INTEGER                 NOT NULL,
                 FOREIGN KEY(ID) REFERENCES {self.mangas_table_name}(ID)
                 UNIQUE(CHAPTER_TITLE)
+                )''')
+        pass
+
+    def create_notification_table(self):
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(f'''CREATE TABLE IF NOT EXISTS {self.notification_table_name}
+                (
+                NAME          CHAR(50)   PRIMARY KEY    NOT NULL,    
+                CHAT_ID       CHAR(15)                  NOT NULL,
+                TYPE          CHAR(15)                  NOT NULL,
+                TOKEN         CHAR(80)                  NOT NULL        
+                )''')
+        pass
+
+    def create_config_table(self):
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(f'''CREATE TABLE IF NOT EXISTS {self.config_table_name}
+                (
+                POOL_SIZE              INTEGER       NOT NULL,    
+                QUEUE_INTERVAL         INTEGER       NOT NULL,
+                DOWNLOAD_INTERVAL      INTEGER       NOT NULL
                 )''')
         pass

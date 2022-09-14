@@ -1,13 +1,10 @@
+from resource.utils import to_json
 from flask import Blueprint, jsonify, request
-from repository.mangas import Manga, Mangas
+from repository.mangas_DB import Mangas
 from service.get_chapters import get_manga_info
 
 
 bp = Blueprint('mangas', __name__, url_prefix='/mangas')
-
-
-def to_json(manga: list[Manga]):
-    return list(map(lambda m: m.to_json(), manga))
 
 
 @bp.route('/', methods=['GET'])
@@ -23,7 +20,7 @@ def addManga():
     try:
         content = request.get_json()
         if not 'rssUrl' in content or not 'fileType' in content or not 'merge' in content:
-           return {'message': 'Missing fields | [ rssUrl, fileType, merge ]'}, 400
+            return {'message': 'Missing fields | [ rssUrl, fileType, merge ]'}, 400
         rssUrl = content['rssUrl']
         fileType = content['fileType']
         merge = content['merge']
