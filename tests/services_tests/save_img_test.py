@@ -37,9 +37,8 @@ class TestSaveImg(unittest.TestCase):
     
 
     def test_save_images_pdf_split(self):
-        chunk = save_images(True)(self.img_list,
-                          f'{SAVE_PATH}', "save_images_pdf_split", "pdf")
-        self.assertEqual(chunk, 1)                   
+        save_images(True)(self.img_list,
+                          f'{SAVE_PATH}', "save_images_pdf_split", "pdf")               
         self.assertTrue(
             exists(f"{SAVE_PATH}/save_images_pdf_split/save_images_pdf_split-000.pdf"))
 
@@ -49,8 +48,7 @@ class TestSaveImg(unittest.TestCase):
         self.assertTrue(exists(f"{SAVE_PATH}/to_file_png/to_file_png-000.png"))
 
     def test_to_file_pdf(self):
-        chunk = to_file(self.img_list, f'{SAVE_PATH}', "to_file_pdf")
-        self.assertEqual(chunk, 1) 
+        to_file(self.img_list, f'{SAVE_PATH}', "to_file_pdf")
         self.assertTrue(exists(f"{SAVE_PATH}/to_file_pdf/to_file_pdf-000.pdf"))
 
     # MERGE
@@ -68,8 +66,7 @@ class TestSaveImg(unittest.TestCase):
         self.assertTrue(exists(f"{SAVE_PATH}/png_merge_all.png"))
 
     def test_merge_all_pdf(self):
-        chunk = merge_all(self.img_list, f'{SAVE_PATH}', "pdf_merge_all")
-        self.assertEqual(chunk, 1)    
+        merge_all(self.img_list, f'{SAVE_PATH}', "pdf_merge_all")
         self.assertTrue(exists(f"{SAVE_PATH}/pdf_merge_all.pdf"))
 
     # SAVE
@@ -92,6 +89,5 @@ class TestSaveImg(unittest.TestCase):
 
     def test_to_pdf(self):
         img_list = cv2.vconcat(self.img_list)
-        chunk = to_pdf(img_list, f"{SAVE_PATH}/to_pdf")
-        self.assertEqual(chunk, 1)    
+        to_pdf(img_list, f"{SAVE_PATH}/to_pdf")  
         self.assertTrue(exists(f"{SAVE_PATH}/to_pdf.pdf"))

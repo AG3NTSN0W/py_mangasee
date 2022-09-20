@@ -2,8 +2,8 @@ import unittest
 
 import os
 from repository.setup import setupDataBase
-from repository.mangas import Mangas, Manga
-from repository.downloads import Downloads, Download
+from repository.mangas_DB import Mangas, Manga
+from repository.downloads_DB import Downloads, Download
 
 TEST_DATA = [Download(1,f"title_{x}", f"url_{x}",
                       f"chapterTitle_{x}") for x in range(5)]

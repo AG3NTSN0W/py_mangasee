@@ -10,9 +10,10 @@ from repository.chapters_DB import MangaChapter, Mangachapters
 from resource.manga import bp as mangas_bp
 from resource.chapter import bp as chapters_bp
 from resource.notification import bp as noti_bp
+from service.notification import Notification as noti
 
 
-from service.get_chapters import Chapter, get_chapters
+from service.get_chapters import get_chapters
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from flask import Flask
@@ -30,6 +31,7 @@ def get_missing_chapters(manga: Manga) -> list[Download]:
             if (not c.chapterTitle in chapters_in_system):
                 missing_chapters.append(
                     Download(manga.id, c.title, c.link, c.chapterTitle))
+                # noti().send(c.chapterTitle) 
                 break_on_count += 1
             if (break_on_count == missing_count):
                 break

@@ -2,8 +2,8 @@ import unittest
 
 import os
 from repository.setup import setupDataBase
-from repository.mangas import Mangas, Manga
-from repository.chapters import MangaChapter, Mangachapters
+from repository.mangas_DB import Mangas, Manga
+from repository.chapters_DB import MangaChapter, Mangachapters
 
 MANGA_TEST_DATA = [
     Manga.constructor(

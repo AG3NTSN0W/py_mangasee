@@ -99,11 +99,11 @@ class Downloader:
             img_list = DownloadImg().get_image_list(chapter.link)
             if (img_list == None or not img_list):
                 return
-            chunk = save_images(not chapter.merge)(
+            save_images(not chapter.merge)(
                 img_list, f'{self.save_to_path}/{chapter.title}', chapter.chapterTitle, chapter.fileType)
             date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
             Mangachapters().add_chapter(MangaChapter(
-                chapter.id, chapter.chapterTitle, date, len(img_list), chunk))
+                chapter.id, chapter.chapterTitle, date, len(img_list), 0))
             noti().send(chapter.chapterTitle)
         except Exception as e:
             if (e.args and len(e.args) >= 2):
